@@ -1,0 +1,115 @@
+body, html {
+    height: 100%;
+  }
+  
+
+.upload-btn-wrapper{
+    position: relative;
+    padding: 0 20px;
+    overflow: hidden;
+    display: inline-block;
+}
+
+
+.upload-btn{
+    padding-left: 20px;
+    padding-top: 20px;
+    background-color: transparent;
+}
+
+.upload-btn p{
+    padding-top:10px;
+    font-size: 20px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color:orangered;
+}
+
+
+.web-title{
+    padding-top:20px;
+    padding-bottom:20px;
+    padding-left:15px;
+    padding-right:20px;
+    font-size:35px;
+    font-family:Arial, Helvetica, sans-serif;
+    font-weight:800;
+    color:white;
+    width:fit-content;
+}
+
+.logout{
+    padding-top:20px;
+    padding-bottom:20px;
+    padding-left:15px;
+    padding-right:20px;
+    font-size:35px;
+    font-family:Arial, Helvetica, sans-serif;
+    font-weight:800;
+    color:white;
+    width:fit-content;
+}
+
+
+body{
+    background-color: rgba(255, 255, 255, 0.386);
+}
+
+.wrapper {
+	display: flex;
+}
+
+.navigation {
+	background-color: #333;
+	height: 100vh;
+	width: 200px;
+	position: fixed;
+}
+
+.navigation ul {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+.navigation ul li {
+	margin: 0;
+	padding: 0;
+}
+
+
+.navigation ul li a {
+	display: block;
+	padding: 20px;
+	color: #fff;
+	text-decoration: none;
+	transition: background-color 0.3s ease;
+}
+
+.navigation ul li a:hover {
+	background-color: #666;
+}
+
+.navigation ul li a.active {
+    color:#333;
+	background-color: white;
+}
+
+.navigation ul li a.inactive {
+    color:#fff;
+}
+
+
+.main-content div.main-active {
+    position:absolute;
+    visibility: visible;
+    margin-left: 200px;
+	padding: 20px;
+}
+
+.main-content div.main-inactive {
+    position:absolute;
+    visibility: hidden;
+    margin-left: 200px;
+	padding: 20px;
+}
+

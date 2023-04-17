@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title> Dashboard</title>
+
+        <script src="https://sdk.amazonaws.com/js/aws-sdk-2.1341.0.min.js"></script>
+
+        <!-- Bootstrap core CSS -->
+        <link href="./assets/css/bootstrap.min.css" rel="stylesheet">
+
+        <!-- Custom styles -->
+        <link href="./assets/css/dashboard.css" rel="stylesheet">
+
+        <!-- api gateway generated sdk -->
+        <script src="./assets/js/sdk/lib/axios/dist/axios.standalone.js"></script>
+        <script src="./assets/js/sdk/lib/CryptoJS/rollups/hmac-sha256.js"></script>
+        <script src="./assets/js/sdk/lib/CryptoJS/rollups/sha256.js"></script>
+        <script src="./assets/js/sdk/lib/CryptoJS/components/hmac.js"></script>
+        <script src="./assets/js/sdk/lib/CryptoJS/components/enc-base64.js"></script>
+        <script src="./assets/js/sdk/lib/url-template/url-template.js"></script>
+        <script src="./assets/js/sdk/lib/apiGatewayCore/sigV4Client.js"></script>
+        <script src="./assets/js/sdk/lib/apiGatewayCore/apiGatewayClient.js"></script>
+        <script src="./assets/js/sdk/lib/apiGatewayCore/simpleHttpClient.js"></script>
+        <script src="./assets/js/sdk/lib/apiGatewayCore/utils.js"></script>
+
+        <script src="./assets/js/sdk/apigClient.js"></script>
+
+    </head>
+
+    <body>
+        <div class="wrapper">
+            <div class="navigation">
+                <div class="web-title">Hub Pixel </div>
+                <ul>
+                    <li><a href="#overview" class="active">Overview</a></li>
+                    <li><a href="#search" class="inactive">Search</a></li>
+                    <li><a href="#upload" class="inactive">Upload</a></li>
+                </ul>
+                <div class="logout"><a href="index.html" class="inactive">Log out</a></div>
+            </div>
+
+            <div class="main-content">
+                <div class="main-active">
+                    <div class="header">
+                        <h1>  Overview</h1>
+                    </div>              
+                </div>
+
+                <div class="main-inactive">
+                    <div class="header">
+                        <h1>  Search</h1>
+
+                        
+                    </div>
+                </div>
+
+                <div class="main-inactive">
+                    <div class="header">
+                        <h1>  Upload</h1>
+                        <h3 class="sub-title-style">Upload Data</h3>
+
+                        <div class="upload-btn-wrapper">
+                            <input type="file" id="data-upload"/>
+                        </div>
+                
+                        <div class="upload-btn">
+                            <button type="submit" class="micro-btn" onclick="uploadData()" >Upload</button>
+                            <p id="upload-msg"></p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+
+            <script>
+                let nav = document.querySelectorAll('.navigation li>a');
+                let content = document.querySelectorAll('.main-content>div');
+
+                for (let i=0; i<nav.length; i++){
+                    nav[i].addEventListener('click', function(){
+                        for (let j=0; j<nav.length; j++){
+                            nav[j].className = 'inactive';
+                            content[j].className = 'main-inactive';
+                        }
+                        nav[i].className = 'active';
+                        content[i].className = 'main-active';
+                    })
+                }
+
+            </script>
+    
+            
+
+        <script>
+            var sdk = apigClientFactory.newClient({apiKey:"FBIlUg19c65trjbP8ATAL8duQpQay6E1597ZEDqO", region: 'us-east-1'});
+        </script>
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+        <script src="./assets/js/bootstrap.min.js"></script>
+        <script src="./assets/js/main.js"></script>
+
+
+    </body>
+</html>
