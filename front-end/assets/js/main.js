@@ -223,7 +223,7 @@ function searchUser(){
         document.getElementById('search-msg').innerHTML = "Please Enter A Keyword";
     }
     else{
-
+        document.getElementById('search-msg').innerHTML = "";
         sdk.searchGet(
             {'q': query},
             {},
