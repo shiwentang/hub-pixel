@@ -43,6 +43,24 @@
                 <div class="main-active">
                     <div class="header">
                         <h1>  Overview</h1>
+                        <div class="dashboard">
+                            <div class="card">
+                              <h2>Users View</h2>
+                              <div class="count-view" id="view-num"></div>
+                            </div>
+
+                            <div class="card">
+                                <h2>Data Upload</h2>
+                                <div class="count-upload" id="upload-num"></div>
+                              </div>
+
+                        </div>
+
+                        <div class="graph-box">
+                            <div class="box">
+                                <canvas id="myChart" width="800" height="400"></canvas>
+                            </div>
+                        </div>
                     </div>              
                 </div>
 
@@ -50,23 +68,40 @@
                     <div class="header">
                         <h1>  Search</h1>
 
+                        <div class="search-wrap">
+                            <div class="search-box">
+                                <input type="text" id="search" placeholder="Search...">
+                                <button type="submit" onclick="searchUser()">Submit</button>
+                            </div>
+    
+                            <button class="export-btn" type="submit" onclick="exportUser()">Export</button>
+    
+                        </div>
+
                         
+                        <p id="search-msg"></p>
+
+                        <table id="user-list" class="user-list"></table>
                     </div>
                 </div>
 
                 <div class="main-inactive">
                     <div class="header">
                         <h1>  Upload</h1>
-                        <h3 class="sub-title-style">Upload Data</h3>
 
-                        <div class="upload-btn-wrapper">
-                            <input type="file" id="data-upload"/>
+                        <div class="upload-wrapper">
+                            <div class="upload-box">
+                                <input type="file" id="data-upload"/>
+                                
+                                <form action="" method="GET">
+                                    <button type="submit" class="upload-btn" onclick="uploadData()" >Upload</button>
+                                </form>
+                            </div>
+
                         </div>
-                
-                        <div class="upload-btn">
-                            <button type="submit" class="micro-btn" onclick="uploadData()" >Upload</button>
-                            <p id="upload-msg"></p>
-                        </div>
+
+                        <p id="upload-msg"></p>
+                        
                     </div>
                 </div>
 
@@ -96,9 +131,13 @@
             var sdk = apigClientFactory.newClient({apiKey:"FBIlUg19c65trjbP8ATAL8duQpQay6E1597ZEDqO", region: 'us-east-1'});
         </script>
 
+        <script src="./assets/js/jwt-decode.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>  
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
         <script src="./assets/js/bootstrap.min.js"></script>
         <script src="./assets/js/main.js"></script>
+
 
 
     </body>
