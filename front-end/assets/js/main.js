@@ -1,13 +1,26 @@
 // cognito
 var idToken = null;
 var customerEmail = null;
+var customerName = null;
+var age_info = null;
+var return_info = null;
+var state_info = null;
 
 function auth() {
-    AWS.config.update({region: "us-east-1"});
+    // AWS.config.update({
+    //     region: "us-east-1"});
     AWS.config.credentials = new AWS.CognitoIdentityCredentials({
-            IdentityPoolId : 'us-east-1:066c45f8-3e30-47ac-9734-f03ea3568881',
-            Logins : {"cognito-idp.us-east-1.amazonaws.com/us-east-1_MN4G95WEx": idToken}
+            IdentityPoolId : 'us-east-1:ec84a75c-6658-45f3-89ec-31dc092c771b',
+            Logins : {"cognito-idp:us-east-1:115482439616:userpool/us-east-1_TX9kAr7Ie": idToken}
           });
+    AWS.config.update({
+        region: 'us-east-1',
+        apiVersion: 'latest',
+        credentials: {
+            accessKeyId: 'AKIARVY2KF7AAHZR6PFV',
+            secretAccessKey: '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'
+        }
+    })
 }
 
 // store information to dynamodb
@@ -15,17 +28,18 @@ AWS.config.update({
     region: 'us-east-1',
     apiVersion: 'latest',
     credentials: {
-      accessKeyId: 'AKIARVY2KF7ANTG5H7TY',
-      secretAccessKey: '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'
+      accessKeyId: 'AKIARVY2KF7AAHZR6PFV',
+      secretAccessKey: '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'
     }
   })
 
 const docClient = new AWS.DynamoDB.DocumentClient();
-function insert(customerEmail){
+function insert(customerEmail, customerName){
     const params = {
         TableName: 'customers',
         Item: {
           email:customerEmail,
+          name: customerName,
           viewNum: 0,
           uploadNum:0
         },
@@ -40,27 +54,37 @@ function insert(customerEmail){
       });
 }
 
+
+// need to change when deploy
 // var url_string = window.location.href;
-var url_string = "https://hubpixel-front-end.s3.amazonaws.com/dashboard.html#id_token=eyJraWQiOiJWUHRQQ0NJQUhFWE1CRlNuSkFYQXZIR0pHSzNZaDIranpIb3Zvb0V1NURvPSIsImFsZyI6IlJTMjU2In0.eyJhdF9oYXNoIjoiY2lCcGtidU4zQVJsQUF6M1RfYmtEZyIsInN1YiI6IjgzNjE4MTk3LTUzZjAtNDMwMS05YzkwLWMzOTZhMmQ2N2JlYyIsImNvZ25pdG86Z3JvdXBzIjpbImh1Yi1waXhlbCJdLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwiaXNzIjoiaHR0cHM6XC9cL2NvZ25pdG8taWRwLnVzLWVhc3QtMS5hbWF6b25hd3MuY29tXC91cy1lYXN0LTFfTU40Rzk1V0V4IiwiY29nbml0bzp1c2VybmFtZSI6InVzZXIiLCJjb2duaXRvOnJvbGVzIjpbImFybjphd3M6aWFtOjoxMTU0ODI0Mzk2MTY6cm9sZVwvZHluYW1vZGItY29nbml0by1yb2xlIl0sImF1ZCI6IjZiaGY3anAyaWRpYmQ3ZTIyYmVuaHFwMG1hIiwidG9rZW5fdXNlIjoiaWQiLCJhdXRoX3RpbWUiOjE2ODE3ODc0NTIsImV4cCI6MTY4MTc5MTA1MiwiaWF0IjoxNjgxNzg3NDUyLCJqdGkiOiI0NTY5NWY3NS02MjVkLTQ4ZTktYTM2Ni1kMzU3ZDUwMzY2OGEiLCJlbWFpbCI6InN0MzUxMEBjb2x1bWJpYS5lZHUifQ.EeXiX4af2gKFTZl9vy6x9-kFJBJkec-D2MafioHgVKfspYozOTUzY_xV1z4MDaR-AN98-Oebf2fV7haSf5ebq-5p7yfo73YJwQdRcghmB5Q7o5ao3-9GJ7mLTP4xWwzHXey-aQ04TT7ZNI2Cbdc29sjHGEVqf-7yvSR45OUzc2cLyEd0-VBp-1oO8H2BhGM8CrPYpg7TzU_Q81XWDaHnYI1GZR8CQdLRqxIfFA9-LvEp6ZPCtP51nWWFALPgpI0YKH9q9DQ8mibPM_hBm41c-aWpGQgXUSDeUiCacPaOjCHs2fEHdm1dnTOtUbXrXvwSgX85xVJDX_tHQffaLLBuAw&access_token=eyJraWQiOiJWeHZiR0swZUZDVXZYUDlcL1wvcHBOWEFLdHY3MFdzcFZ4NVRqZFwvc2p0aWFnPSIsImFsZyI6IlJTMjU2In0.eyJzdWIiOiI4MzYxODE5Ny01M2YwLTQzMDEtOWM5MC1jMzk2YTJkNjdiZWMiLCJjb2duaXRvOmdyb3VwcyI6WyJodWItcGl4ZWwiXSwiaXNzIjoiaHR0cHM6XC9cL2NvZ25pdG8taWRwLnVzLWVhc3QtMS5hbWF6b25hd3MuY29tXC91cy1lYXN0LTFfTU40Rzk1V0V4IiwidmVyc2lvbiI6MiwiY2xpZW50X2lkIjoiNmJoZjdqcDJpZGliZDdlMjJiZW5ocXAwbWEiLCJ0b2tlbl91c2UiOiJhY2Nlc3MiLCJzY29wZSI6InBob25lIG9wZW5pZCBlbWFpbCIsImF1dGhfdGltZSI6MTY4MTc4NzQ1MiwiZXhwIjoxNjgxNzkxMDUyLCJpYXQiOjE2ODE3ODc0NTIsImp0aSI6IjVmMjQ1ZTg2LTgyYzctNGFkYS1iZDlkLTA3ZmIyZGY0N2RkNiIsInVzZXJuYW1lIjoidXNlciJ9.ithJ4c2Xk03cQBPQtQDPHBGTOWp1bmRvDiETW4GOuEYZVFtJY2Y0_Vcvf60aVAYq_IX5lMHX3zDde2FnBYlL2D47E3e02nYYqPMaAppN6vKhEiNa1B8puIcDVNki8EC4065NJ9Y1wRH3qNuJ65ch7FvCxdgVQRV3Dqcszgi0HbauvE6sx3e7DB8s4__PIfF-x0utUUVrD2Syk5C4vF57NDKM_0altM3VjlKLUnKvgOzwdzy_tEd1gY-e8lUAwR2Tl7QOeVZckODLdGYLpZvcFI69dGjy0VWvgYLveDSzK5EfRolU7jiaNp6mEbkm2Wa46FmPRpJ7yz6Bw9azxcqPhQ&expires_in=3600&token_type=Bearer";
+// url for testing
+var url_string = "https://hubpixel-front-end.s3.amazonaws.com/dashboard.html#id_token=eyJraWQiOiJaekJ5eWpJYmN4ek0xbE5cL1RIR212QWROWXY2TCtXVTg0Y1BOMUxIQ2JFdz0iLCJhbGciOiJSUzI1NiJ9.eyJhdF9oYXNoIjoiUHdPZ0dqclh1T0cwQUhnZHp0MklNdyIsInN1YiI6IjQ0MWMzN2Y3LWZmMjQtNGU3My1hZjcxLWRmYjY1YzgyMzA5ZiIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJpc3MiOiJodHRwczpcL1wvY29nbml0by1pZHAudXMtZWFzdC0xLmFtYXpvbmF3cy5jb21cL3VzLWVhc3QtMV9UWDlrQXI3SWUiLCJjb2duaXRvOnVzZXJuYW1lIjoiNDQxYzM3ZjctZmYyNC00ZTczLWFmNzEtZGZiNjVjODIzMDlmIiwiYXVkIjoiMjViMWJmMHNyNDJiNGxucGlrcDAyczI3cmwiLCJldmVudF9pZCI6IjUwYzNkOWRiLThkYzktNDY5OC1hZDg1LTBiMThmOTdiYTY1NiIsInRva2VuX3VzZSI6ImlkIiwiYXV0aF90aW1lIjoxNjgyNTc0ODcxLCJleHAiOjE2ODI1Nzg0NzEsImlhdCI6MTY4MjU3NDg3MSwianRpIjoiNjA0YmJlNTMtOGJiZC00ZjhlLWI0ZGQtMzA1YmE1NzEzY2YxIiwiZW1haWwiOiJzdDM1MTBAY29sdW1iaWEuZWR1In0.fT7irFMHgFQ9csDQpkvJKOCaH8ZMuJeQARhy--bR7_Vyqp4fmdbqHi6RjTQtCdd4iPO_QshtYu6FL7PaE0dTu7oh3-AY4Y-VN7X2eM7wEf_FLAINLAfFpqFQsUhdjTNO5OSQlT5p-eWENVhsdkb1ATN1Nge-mpg6N_I2NHawetDxT5MMcCOdBidNp210JSdZNyA2VR0VJRYbZOJjlj9eRk5eKVbA-AYIQ66wW1l8QCBf31kmTwtW6MuxZw7lzed2codUB5sIAcpWsmLR1UYvu2gIL7TRyuIsaoRGvfZi8TNZYZFn6rSSrzFtUe_H4aY_KBUcVyYrDh0Wl2oz7gZ0kw&access_token=eyJraWQiOiJsd0RYVFdcL012ano5NEVidFVnMEZIckRJVFd2YXNoQ1l6MFNmYVFxbWoyOD0iLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiI0NDFjMzdmNy1mZjI0LTRlNzMtYWY3MS1kZmI2NWM4MjMwOWYiLCJpc3MiOiJodHRwczpcL1wvY29nbml0by1pZHAudXMtZWFzdC0xLmFtYXpvbmF3cy5jb21cL3VzLWVhc3QtMV9UWDlrQXI3SWUiLCJ2ZXJzaW9uIjoyLCJjbGllbnRfaWQiOiIyNWIxYmYwc3I0MmI0bG5waWtwMDJzMjdybCIsImV2ZW50X2lkIjoiNTBjM2Q5ZGItOGRjOS00Njk4LWFkODUtMGIxOGY5N2JhNjU2IiwidG9rZW5fdXNlIjoiYWNjZXNzIiwic2NvcGUiOiJwaG9uZSBvcGVuaWQgZW1haWwiLCJhdXRoX3RpbWUiOjE2ODI1NzQ4NzEsImV4cCI6MTY4MjU3ODQ3MSwiaWF0IjoxNjgyNTc0ODcxLCJqdGkiOiJiODdjMTM0YS0yYTc5LTQyNjYtODE2Yy04MjE2MGYxZjM4M2EiLCJ1c2VybmFtZSI6IjQ0MWMzN2Y3LWZmMjQtNGU3My1hZjcxLWRmYjY1YzgyMzA5ZiJ9.v0IAKYv2RP7V9Py6NAWyXUjYLE0-xPa_U3nhuSEjjIyaoy85KeEkUVelCMVuOM7kSS-B3uwhUKMCvLtmsEKa7e4UcWZwbLm9ltCDS65e0EqvH-4lwxHY9lLXElOl2rgO-Cids9xcnGwnpmpNQOJhv1rFcqXOfoajTNm36X8DvMlX7y_hOOw8R2lSCBNKxazB0ptcR_0pz3MB-PZEDIucaaU2DXuKOPK9Fzq_whAFr-BCC0Zkhtc5-n1Skcd3ItWlFp54iIRIsU4UO8Q7gte5MGyzzof-dA9dJRuyhQsMA3kFqEUal7p3nFP6xDN4wLF4zZpi7T6vo34lZx3GuHp2xg&expires_in=3600&token_type=Bearer"
 var idToken = url_string.split("#").pop().split("&")[0].split("=")[1];
 if (idToken != null) {
     auth();
     const decoded = jwt_decode(idToken);
-    customerEmail = decoded["email"]
+    customerEmail = decoded["email"];
     console.log(customerEmail);
-    var params = {
-        TableName: 'customers',
-        Key: {
-            email: customerEmail,
-        },
-      }
-      
-    docClient.get(params, function (err, data) {
-    if (err) console.log(err)
-    else {
-        console.log(data['Item']);   
-    }
-    })
+
+    const cognitoIdentityServiceProvider = new AWS.CognitoIdentityServiceProvider();
+    const params_cognito = {
+        UserPoolId: 'us-east-1_TX9kAr7Ie',
+        Filter:'email="'+customerEmail + '"'
+    };
+    cognitoIdentityServiceProvider.listUsers(params_cognito, function(error, data){
+        if (error){
+            console.log(error);
+        }else{
+            // console.log(customerName);
+            customerName = data['Users'][0]['Attributes'][2]['Value'];
+            console.log(customerName);
+
+            document.getElementById('greeting').innerHTML = "Hello "+customerName+"!";
+
+            insert(customerEmail, customerName);
+            }   
+    });
+
 }
 
 
@@ -83,7 +107,7 @@ function showUploadNum(){
     var getparams = {
         TableName: 'customers',
         Key: {
-            email: customerEmail,
+            email: customerEmail
         },
     }
     docClient.get(getparams, function (err, data) {
@@ -96,7 +120,6 @@ function showUploadNum(){
 
 showUsersViewNum();
 showUploadNum();
-
 
 let query_table = [];
 
@@ -163,8 +186,6 @@ function uploadData(){
     }
 }
 
-
-
 var numViews = 0;
 
 function updateUsersView(){
@@ -225,7 +246,7 @@ function searchUser(){
     else{
         document.getElementById('search-msg').innerHTML = "";
         sdk.searchGet(
-            {'q': query},
+            {'q': query, 'companyEmail':customerEmail},
             {},
             {}
         )
@@ -275,11 +296,9 @@ function searchUser(){
             console.log("error", error);
         });
     }
-
 }
 
-
-
+// export user list in csv
 function exportUser(){
     var table = document.getElementById('user-list');
     var exportButton = document.getElementById('export-button');
@@ -294,15 +313,95 @@ function exportUser(){
             var row = query_table[i];
             csv.push(row.join(','));
         }
-
         return csv.join('\n');
     }
-
 }
 
 
-const ctx = document.getElementById('myChart');
-new Chart(ctx, {
+
+function getDashboard(){
+    sdk.dashboardGet(
+        {'companyEmail':customerEmail},
+        {},
+        {}
+    )
+    .then((response) =>{
+        // console.log(response.data);
+        age_info = response.data["age_info"];
+        return_info = response.data["return_info"];
+        state_info = response.data["state_info"];
+
+        initMap();
+        barChart();
+
+    })
+    .catch((error) => {
+        console.log("error", error);
+    });
+
+}
+
+setInterval(getDashboard, 5000);
+
+function barChart(){
+    // console.log(age_info);
+    var xValues = ['<15', '15-30', '30-45', '45-60', '60-75', '>75', 'NaN'];
+    var yValues = [age_info['<15'], age_info['15-30'], age_info['30-45'], age_info['45-60'], age_info['60-75'], age_info['>75'], age_info['NaN']];
+
+    const age_chart = document.getElementById('age_chart');
+    var barColors = [
+        "rgba(0,0,255,1.0)",
+        "rgba(0,0,255,0.8)",
+        "rgba(0,0,255,0.6)",
+        "rgba(0,0,255,0.4)",
+        "rgba(0,0,255,0.2)",
+      ];
+    new Chart(age_chart, {
+        type: "pie",
+        data: {
+          labels: xValues,
+          datasets: [{
+            backgroundColor: barColors,
+            data: yValues
+          }]
+        },
+        options: {
+          title: {
+            display: true,
+            text: "Product Count Based on Age"
+          }
+        }
+      });
+    
+}
+
+function initMap() {
+    google.charts.load('current', {
+        'packages':['geochart'],
+        'mapsApiKey': 'AIzaSyAcxi8f3Aw3s56pCzZDOKYwqjfWxmsawNk'
+      });
+        google.charts.setOnLoadCallback(drawRegionsMap);
+        // console.log(state_info);
+
+        var stateArray = [['Country', 'Return Rate']];
+
+        for(var i=0; i<state_info.length; i++){
+            element = state_info[i];
+            stateArray.push(element);
+        }
+
+        function drawRegionsMap() {
+            // console.log(stateArray);
+            var data = google.visualization.arrayToDataTable(stateArray);
+            var options = {region: 'US', resolution:'provinces',  colorAxis: {colors: ["#FF5733"]}};
+            var chart = new google.visualization.GeoChart(document.getElementById('regions_div'));
+            chart.draw(data, options);
+        }
+}
+
+function histChart(){
+    console.log()
+    new Chart(ctx, {
         type: 'bar',
         data: {
             labels: ['Sun', 'Mon', 'Tue', 'Wed', 'Thur', 'Fri', 'Sat'],
@@ -322,4 +421,46 @@ new Chart(ctx, {
         barThickness: 50
     }
 });
+}
 
+
+
+// var s = document.getElementById('select');
+// s.innerHTML = "";
+// var optionArray = ["Subcat3", "Subcat3.1", "Subcat3.3"];
+// var arrLen = optionArray.length;
+
+// function checklist() {
+//     for (var i = 0; i < arrLen; i++) {
+//         var pair = optionArray[i];
+//         var label = document.createElement('label')
+//         var checkbox = document.createElement("input");
+//         checkbox.type = "checkbox";
+//         checkbox.id = "checkbox_"+i;
+//         checkbox.name = pair;
+//         label.appendChild(checkbox);
+//         label.appendChild(document.createTextNode(pair));
+//         s.appendChild(label);
+//         s.appendChild(document.createElement("br"));
+
+//     }
+// }
+
+
+// function submitcheck(){
+//     var checkedArr = []; 
+    
+//     for(var i=0; i < arrLen; ++i){
+//         var boxId = "checkbox_"+i;
+//         var element = document.getElementById(boxId);
+//         if (element.checked == true){
+//             checkedArr.push(element.name);
+//         }
+
+//     }
+
+//     console.log(checkedArr);
+
+// }
+
+// setInterval(checklist(), 50);

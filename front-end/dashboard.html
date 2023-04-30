@@ -41,8 +41,9 @@
 
             <div class="main-content">
                 <div class="main-active">
+                    <h1 id="greeting"> </h1>
                     <div class="header">
-                        <h1>  Overview</h1>
+                        <!-- <h1>  Overview</h1>
                         <div class="dashboard">
                             <div class="card">
                               <h2>Users View</h2>
@@ -52,15 +53,39 @@
                             <div class="card">
                                 <h2>Data Upload</h2>
                                 <div class="count-upload" id="upload-num"></div>
-                              </div>
+                            </div>
 
+                        </div> -->
+
+
+                        <div class="graph-box">
+                            <div class="box">
+                                <h2>Zip Code Heatmap</h2>
+                                <body onload="initMap()">
+                                    <div id="map"></div>
+                                </body>
+                                <div id="regions_div" style="width: 500px; height: 500px;"></div>
+                            </div>
+                        </div>
+                        
+
+                        <div class="graph-box">
+                            <div class="box">
+                                <h2>Product Count Based on Age</h2>
+                                <canvas id="age_chart" width="500" height="500"></canvas>
+                            </div>
                         </div>
 
                         <div class="graph-box">
                             <div class="box">
-                                <canvas id="myChart" width="800" height="400"></canvas>
+                                <h2>bar chart for most popular product</h2>
+                                <canvas id="age_chart" width="500" height="500"></canvas>
                             </div>
                         </div>
+
+
+
+
                     </div>              
                 </div>
 
@@ -69,19 +94,18 @@
                         <h1>  Search</h1>
 
                         <div class="search-wrap">
-                            <div class="search-box">
+                            <!-- <div class="search-box">
                                 <input type="text" id="search" placeholder="Search...">
                                 <button type="submit" onclick="searchUser()">Submit</button>
-                            </div>
+                            </div> -->
     
                             <button class="export-btn" type="submit" onclick="exportUser()">Export</button>
-    
+
                         </div>
+                        <p id="search-msg"></p>
+                        <table id="user-list" class="user-list"></table>
 
                         
-                        <p id="search-msg"></p>
-
-                        <table id="user-list" class="user-list"></table>
                     </div>
                 </div>
 
@@ -131,6 +155,8 @@
             var sdk = apigClientFactory.newClient({apiKey:"FBIlUg19c65trjbP8ATAL8duQpQay6E1597ZEDqO", region: 'us-east-1'});
         </script>
 
+
+        <script src="https://www.gstatic.com/charts/loader.js"></script>
         <script src="./assets/js/jwt-decode.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>  
