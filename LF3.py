@@ -1,10 +1,11 @@
 import boto3
 import csv
 import json
+import pandas as pd
 
 s3 = boto3.client('s3')
 sqs = boto3.client('sqs')
-queue_url = 'https://sqs.us-east-1.amazonaws.com/115482439616/myQueue'
+queue_url = 'https://sqs.us-east-1.amazonaws.com/924301557872/queueDemo' 
 
 def lambda_handler(event, context):
     # Get the S3 bucket and key from the event
@@ -15,21 +16,18 @@ def lambda_handler(event, context):
         'statusCode': 200,
         'body': 'not a csv'
     }
-    # Download the CSV file from S3
-    file_obj = s3.get_object(Bucket=bucket_name, Key=file_key)
-    file_content = file_obj['Body'].read().decode('utf-8')
-    # Parse the CSV file and send each row (excluding the header row) to SQS
-    csv_reader = csv.reader(file_content.split('\n'), delimiter=',', quotechar='"')
-    header_row = next(csv_reader)
-    header_row = [i.replace('\ufeff', '') for i in header_row]
-    for row in csv_reader:
-        # Create a dictionary for the current row
-        row_dict = {}
-        for i in range(len(header_row)):
-            cell_value = row[i].strip() if row[i].strip() != "" else "unknown"
-            row_dict[header_row[i]] = cell_value
-        
+    # Read CSV file from S3
+    response = s3.get_object(Bucket=bucket_name, Key=file_key)
+    print(response)
+    status = response.get("ResponseMetadata", {}).get("HTTPStatusCode")
+    df = pd.read_csv(response.get("Body"))
+    # Data Clean
+    items = ['firstName', 'lastName', 'phoneNumber', 'email', 'Age', 'Product', 'Return Stat', 'State', 'Company']
+    df = df.filter(items=[item for item in items if item in df.columns])
+
+    for index, row in df.iterrows():
         # Send the row to SQS
+        row_dict = dict(row)
         response = sqs.send_message(
             QueueUrl=queue_url,
             MessageBody=json.dumps(row_dict)

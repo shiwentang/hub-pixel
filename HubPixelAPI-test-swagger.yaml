@@ -1,19 +1,19 @@
 ---
 swagger: "2.0"
 info:
-  version: "2023-04-18T04:47:45Z"
+  version: "2023-05-07T20:40:11Z"
   title: "HubPixelAPI"
-host: "x5xglga89i.execute-api.us-east-1.amazonaws.com"
-basePath: "/s1"
+host: "sy5m6k6reh.execute-api.us-east-1.amazonaws.com"
+basePath: "/test"
 schemes:
 - "https"
 paths:
-  /search:
+  /dashboard:
     get:
       produces:
       - "application/json"
       parameters:
-      - name: "q"
+      - name: "companyEmail"
         in: "query"
         required: false
         type: "string"
@@ -25,8 +25,40 @@ paths:
           headers:
             Access-Control-Allow-Origin:
               type: "string"
-      security:
-      - api_key: []
+    options:
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      responses:
+        "200":
+          description: "200 response"
+          schema:
+            $ref: "#/definitions/Empty"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
+            Access-Control-Allow-Methods:
+              type: "string"
+            Access-Control-Allow-Headers:
+              type: "string"
+  /recommend:
+    get:
+      produces:
+      - "application/json"
+      parameters:
+      - name: "companyEmail"
+        in: "query"
+        required: false
+        type: "string"
+      responses:
+        "200":
+          description: "200 response"
+          schema:
+            $ref: "#/definitions/Empty"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
     options:
       consumes:
       - "application/json"
@@ -69,8 +101,6 @@ paths:
               type: "string"
             Access-Control-Allow-Headers:
               type: "string"
-      security:
-      - api_key: []
     options:
       consumes:
       - "application/json"
@@ -97,11 +127,6 @@ paths:
               type: "string"
             Access-Control-Allow-Headers:
               type: "string"
-securityDefinitions:
-  api_key:
-    type: "apiKey"
-    name: "x-api-key"
-    in: "header"
 definitions:
   Empty:
     type: "object"

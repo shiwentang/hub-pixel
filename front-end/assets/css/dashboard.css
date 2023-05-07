@@ -54,7 +54,7 @@ h1 {
     padding-bottom:20px;
     padding-left:15px;
     padding-right:20px;
-    font-size:35px;
+    font-size:15px;
     font-family:Arial, Helvetica, sans-serif;
     font-weight:800;
     color:white;
@@ -159,20 +159,22 @@ body{
 
 
 .user-list {
+    margin-left: 20px;
     width: 100%;
     max-width: 800px;
-    margin: 0 auto;
     border-collapse: collapse;
 }
 
 .user-list th,
 .user-list td {
+    margin-left: 20px;
     padding: 10px;
     border: 1px solid #ccc;
     text-align: left;
 }
 
 .user-list th {
+    margin-left: 20px;
     background-color: #eee;
     font-weight: bold;
 }
@@ -188,6 +190,8 @@ body{
     height: 30px;
 
 }
+
+
 
 .search-wrap {
     padding-left:20px;
