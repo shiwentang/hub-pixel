@@ -64,6 +64,56 @@ def lambda_handler(event, context):
     resp = { "data": {'age_info': age, 
             'state_info': state,
             'topic_info': popular}}
+            
+            
+    # store data in dynamodb
+    analysis_table_name = "analysis_table"
+    response = db_client.list_tables()        
+
+        
+    highReturnValue = sorted(state.items(), key=lambda x:x[1])[-1][1]
+    print("highReturnValue", highReturnValue)
+    state_high_retrun = []
+    for item in state:
+        if state[item] == highReturnValue:
+            state_high_retrun.append(item)
+    print("state high return", state_high_retrun)
+   
+    highAgePurchase = sorted(age.items(), key=lambda x:x[1])[-1][1]
+    print("highAgePurchase", highAgePurchase)
+    age_high_purchase = []
+    for item in age:
+        if age[item] == highAgePurchase:
+            age_high_purchase.append(item)
+    print("age_high_purchase", age_high_purchase)
+    
+    
+    if analysis_table_name not in response['TableNames']:
+        response = db_client.create_table(
+            TableName=analysis_table_name,
+            AttributeDefinitions=[
+                {"AttributeName":"email", "AttributeType": "S"}, 
+                ],
+            KeySchema=[
+                {"AttributeName":"email", "KeyType": "HASH"}, 
+                ],
+            ProvisionedThroughput={
+                'ReadCapacityUnits': 100,
+                'WriteCapacityUnits': 100
+            }
+        )
+        print(response)
+ 
+    try:
+        analysis_table = dynamodb.Table(analysis_table_name)
+        response = analysis_table.put_item(
+                        Item={"email":companyEmail,
+                            "name":companyName,
+                            "highReturnState":state_high_retrun,
+                            "highAgePurchase":age_high_purchase})
+    except:
+        print("cannot insert to dynamodb")
+
     
     # TODO implement
     return {
