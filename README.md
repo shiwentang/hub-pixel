@@ -1,5 +1,5 @@
 # hub-pixel
-marketing simplified 
+Marketing Simplified 
 
 # Website
 http://frontend-hubpixel.s3-website-us-east-1.amazonaws.com/
