@@ -37,19 +37,17 @@ def getTopicByUser(user): #email -> topic from dynamodb
     user_table = dynamodb.Table('user-profile')
     key = {'email':user} 
     
-    print(user_table.get_item(Key=key))
-    item = user_table.get_item(Key=key)['Item']
-    
-    topic = item['topic']
-    return topic
-
+    item = user_table.get_item(Key=key)
+    if 'Item' in item:
+        return item['Item']['topic']
+    else:
+        return []
 def getTop5Topics(companyName):  # Get top5 topic from a given company
     table_name = 'topic_rank_'+companyName
     table = dynamodb.Table(table_name)
     response = table.scan()
     items = response['Items']
     while 'LastEvaluatedKey' in response:
-        print(response['LastEvaluatedKey'])
         response = table.scan(ExclusiveStartKey=response['LastEvaluatedKey'])
         items.extend(response['Items'])
     # Sort the items by num attribute in descending order and get the top 5 items
@@ -62,9 +60,12 @@ def getInfoByUser(user):
     
     user_table = dynamodb.Table('user-profile')
     key = {'email':user} 
-    item = user_table.get_item(Key=key)['Item']
-    
-    return {"email":user, "phoneNumber":item['phoneNumber']}
+    item = user_table.get_item(Key=key)
+    if 'Item' in item:
+        pNum = item['Item']['phoneNumber']
+    else:
+        pNum = ''
+    return {"email":user, "phoneNumber":pNum}
     
 def getFullInfoByUser(user):
     user_table = dynamodb.Table('user-profile')
@@ -84,7 +85,6 @@ def insert_reommend_db(companyName, info):
 
     response = db_client.list_tables()        
     
-    # print(response['TableNames'])
     if company_table_name not in response['TableNames']:
         response = db_client.create_table(
             TableName=company_table_name,
@@ -111,41 +111,32 @@ def insert_reommend_db(companyName, info):
         print("cannot insert to dynamodb") 
 
 def lambda_handler(event, context):
-    try:
-        email = event['queryStringParameters']['companyEmail']
-        print(email)
-        print(companyTable.get_item(Key={'email': email}))
-        companyName = companyTable.get_item(Key={'email': email})['Item']['name']
-        print(companyName)
-        topics = getTop5Topics(companyName)
-        users = [] # users who purchased top5 topics
-        for topic in topics:
-            users.extend(getUserByTopic(topic))
-        users = set(users)
-        print(users)
-        
-        topics = [] # get topics of users
-        for u in list(users):
-            topics.extend(getTopicByUser(u))
-        topics = set(topics)
-        print(topics)
-        
-        recommenedUser = []
-        for topic in list(topics):
-            recommenedUser.extend(getUserByTopic(topic))
-        recommenedUser = set(recommenedUser)
-        print(recommenedUser)
-        
-        output = []
-        for user in list(recommenedUser):
-            if user not in list(users):
-                insert_reommend_db(companyName, getFullInfoByUser(user))
-                output.append(getInfoByUser(user))
 
+    email = event['queryStringParameters']['companyEmail']
+    companyName = companyTable.get_item(Key={'email': email})['Item']['name']
+    topics = getTop5Topics(companyName)
+    users = [] # users who purchased top5 topics
+    for topic in topics:
+        users.extend(getUserByTopic(topic))
+    users = set(users)
 
-        resp = {"output":output}
-    except:
-        resp = {"output":[]}
+    topics = [] # get topics of users
+    for u in list(users):
+        topics.extend(getTopicByUser(u))
+    topics = set(topics)
+
+    recommenedUser = []
+    for topic in list(topics):
+        recommenedUser.extend(getUserByTopic(topic))
+    recommenedUser = set(recommenedUser)
+
+    
+    output = []
+    for user in list(recommenedUser):
+        if user not in list(users):
+            output.append(getInfoByUser(user))
+     
+    resp = {"output":output}
 
     return {
         "statusCode": 200,

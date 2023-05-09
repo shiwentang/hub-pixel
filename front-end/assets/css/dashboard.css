@@ -35,6 +35,16 @@ h1 {
     border-radius: 5px;
 }
 
+.upload-msg{
+    color: rgba(255, 0, 0, 0.653);
+    font-size: 25px;
+    margin-left: 20px;
+
+}
+
+.info-msg{
+    margin-left: 20px;
+}
 
 
 .web-title{
@@ -191,6 +201,11 @@ body{
 
 }
 
+.waiting-msg{
+    margin-left: 20px; 
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
 
 
 .search-wrap {

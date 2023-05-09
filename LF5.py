@@ -18,10 +18,16 @@ def lambda_handler(event, context):
         companyName = item['name']
         highAgePurchase = ", ".join(item['highAgePurchase'])
         highReturnState = ", ".join(item['highReturnState'])
-        message = f"Dear {companyName},\n \n After analyzing your sales data, I have found that your most frequently purchased products are mostly preferred by the age group between {highAgePurchase}."+\
-        f"Additionally, I also noticed that the products from certain states have a high return rate: {highReturnState}.\n \n"+\
-        f"I believe it is important to bring this to your attention as it can help you focus your marketing efforts and product development towards the specific age group that is most interested in your products. Furthermore, addressing the high return rate in certain states can help you improve your product quality and customer satisfaction. \n \n " + \
-        f"Best, \n HubPixel"
+        highProduct = ", ".join(item['highProduct'])
+        
+        
+        message = f"Dear {companyName},\n \nBased on the analysis of your sales data (uploaded into our platform),"+\
+        f"it shows that the age group ranging from {highAgePurchase} frequently purchased products from {companyName}."+\
+        f"Furthermore, some Staes have a higher return rate, such as {highReturnState}. It could be something"+\
+        f"{companyName} work on to mitigate future returns, which will essentially aid in customer satisfaction."+\
+        f"Below is the list of frequently bought products: {highProduct}\n \n"+\
+        f"Best, \nHubPixel"
+
         send_email(item['email'], message)
     return {
         'statusCode': 200,

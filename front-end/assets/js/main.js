@@ -26,6 +26,7 @@ function auth() {
     })
 }
 
+
 // store information to dynamodb
 AWS.config.update({
     region: 'us-east-1',
@@ -37,7 +38,6 @@ AWS.config.update({
   })
 
 const docClient = new AWS.DynamoDB.DocumentClient();
-
 
 function insert(customerEmail, customerName){
 
@@ -51,8 +51,6 @@ function insert(customerEmail, customerName){
         },
       };
 
-
-      
       docClient.put(params, (err, data) => {
         if (err) {
           console.error(err);
@@ -61,14 +59,15 @@ function insert(customerEmail, customerName){
         console.log("data uploaded");
       });
 }
-
   
 var x = document.cookie;
 console.log("get cookie", x);
 
+
 // need to change when deploy
 var url_string = window.location.href;
 // url for testing
+// var url_string = "https://frontend-hubpixel.s3.amazonaws.com/index.html#id_token=eyJraWQiOiJZbm9FZFowWUhSRndWZUZxcTZuY1lReFwvaFI3c1NpdTY2WlErMmVFZjg2MD0iLCJhbGciOiJSUzI1NiJ9.eyJhdF9oYXNoIjoiWnFaakE2Y2xpUWRoNVNJYm5jWmxjQSIsInN1YiI6ImUxYzM5NDBiLTg2MzYtNDRkNi04ZTM1LTJjYjI3ZjZmYWE0NSIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJpc3MiOiJodHRwczpcL1wvY29nbml0by1pZHAudXMtZWFzdC0xLmFtYXpvbmF3cy5jb21cL3VzLWVhc3QtMV9scWg5MnhLQ1IiLCJjb2duaXRvOnVzZXJuYW1lIjoiZTFjMzk0MGItODYzNi00NGQ2LThlMzUtMmNiMjdmNmZhYTQ1IiwiYXVkIjoiNjI5bGs3ZG1sdGZwaWMydjJiNzBkMWRqY3AiLCJ0b2tlbl91c2UiOiJpZCIsImF1dGhfdGltZSI6MTY4MzQzMzMwNiwiZXhwIjoxNjgzNDM2OTA2LCJpYXQiOjE2ODM0MzMzMDYsImp0aSI6ImViNGY0Zjc1LTgxNzQtNGJkMC04NWE2LTNjYTZhM2I5ODcyZSIsImVtYWlsIjoiY29tczY5OThjbG91ZGNvbXB1dGluZ0BnbWFpbC5jb20ifQ.O0_oQ0CU0mbwV77olr6wbYQwLCYfdMVEmKHccC6UXvt-bltWdgxytEygvF_IDfM_5zQB1-oQ8scyuerCsMycCCXwVZ8ic0SEQsZkkwMbnsSF8uzV6S2VA70Z1_yNn3kHno6ePjOIBVZOMLZl9iGqexRI1cvQ3nGq2jZPH9a8fmEC3vRBMBQHn7qSQQI9YKOITHRJV1zpHmsyJlmTDEA8EcJjWxs5cA28NiMvD8eCPZlyqH2MAZ_abvKbYL_d2D-E8r851xYy4Udq6v1XoKxevD-Zm-GT1W3_siokvAwzF_ayPW0gL9O9UYjcCOD9XAEXaLgLVFMKqNNDnFgMCrolzg&access_token=eyJraWQiOiJ0UjdZWVNkdWYyenhobFhIa0xYZVwvZ05rUGNBdk9ONkhHR3EwTjFkTmprbz0iLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJlMWMzOTQwYi04NjM2LTQ0ZDYtOGUzNS0yY2IyN2Y2ZmFhNDUiLCJ0b2tlbl91c2UiOiJhY2Nlc3MiLCJzY29wZSI6InBob25lIG9wZW5pZCBlbWFpbCIsImF1dGhfdGltZSI6MTY4MzQzMzMwNiwiaXNzIjoiaHR0cHM6XC9cL2NvZ25pdG8taWRwLnVzLWVhc3QtMS5hbWF6b25hd3MuY29tXC91cy1lYXN0LTFfbHFoOTJ4S0NSIiwiZXhwIjoxNjgzNDM2OTA2LCJpYXQiOjE2ODM0MzMzMDYsInZlcnNpb24iOjIsImp0aSI6Ijk4ZGNhNGYyLWQ4YmYtNDFiNS1iYjBlLTU2ZWE1ODMyYTA0ZiIsImNsaWVudF9pZCI6IjYyOWxrN2RtbHRmcGljMnYyYjcwZDFkamNwIiwidXNlcm5hbWUiOiJlMWMzOTQwYi04NjM2LTQ0ZDYtOGUzNS0yY2IyN2Y2ZmFhNDUifQ.L82E4PVqMNPmlfGZrmOPzzdkDzLAEjREGbAsZsMJosEFtYlkq7vax7OWadGsZ-HsszoDVM0stYyQPoT5S0nEg-AjVXgxjOWzazlASzay_5u-NsYc7YvMp7cLIAwnmjtmWnU-ha-27NGSrxoHcZ7TnRLa-PUgG3GnKEVpHWLDSs8ck_GjFtXGyDIzhoQPHpypEzq1W5ilffSTawR8NMIKgQpb8pQyZ-v0LJskpF2UwhjcnW_vPgoC2bXp1dk6T3j_XvAAYy5bJwRKdv1jEEcGi3E9hfPa-iedHFVBp6VMGLkGAyyXDzTH-n8IGt6D5iHzdcr7g8FgkFH9VOj5bSY4DA&expires_in=3600&token_type=Bearer"
 var identify = url_string.split("#").pop();
 
 var idToken = url_string.split("#").pop().split("&")[0].split("=")[1];
@@ -103,17 +102,20 @@ if (idToken != null) {
                    location.reload();
                }
             });
-
+            console.log(customerEmail, customerName);
             insert(customerEmail, customerName);
-            }   
+        }   
     });
 
 } else{
-
+    customerEmail = document.cookie.split('&')[0];
     customerName = document.cookie.split('&')[1];
     document.getElementById('greeting').innerHTML = "Hello "+customerName+"!";
+    console.log(customerEmail, customerName);
+    insert(customerEmail, customerName);
 
 }
+
 
 
 function showUsersViewNum(){
@@ -211,6 +213,7 @@ function uploadData(){
                     console.log("Error at uploadCSVFileOnS3Bucket function", err);
                 } else {
                     console.log("File uploaded Successfully");
+                    document.getElementById('upload-msg').innerHTML = "Succeessfully uploaded.";
                 }
             });
 
@@ -223,6 +226,8 @@ function uploadData(){
 
     }
 }
+
+
 
 var numViews = 0;
 
@@ -290,18 +295,14 @@ function searchUser(){
         console.log(response.data);
 
         if (response.data.output.length != 0){
+            document.getElementById('wait-recommend').innerHTML = "";
+
             response.data.output.forEach(element => {
                 if (element){
                     const userDiv = document.createElement('tbody');
 
                     const userEmail = document.createElement('td');
                     userEmail.textContent = `${element.email}`;
-
-                    // const userFirstName = document.createElement('td');
-                    // userFirstName.textContent = `${element.firstName}`;
-
-                    // const userLastName = document.createElement('td');
-                    // userLastName.textContent = `${element.lastName}`;
 
                     const userPhone = document.createElement('td');
                     userPhone.textContent = `${element.phoneNumber}`;
@@ -332,6 +333,8 @@ function searchUser(){
     });
 
 }
+
+setInterval(searchUser(), 5000);
 
 // export user list in csv
 function exportUser(){
@@ -383,13 +386,14 @@ function getDashboard(){
 
 }
 
-getDashboard();
+setInterval(getDashboard(), 5000);
 
 
 function barChart(){
     // console.log(age_info);
-    var xValues = ['<15', '15-30', '30-45', '45-60', '60-75', '>75', 'NaN'];
-    var yValues = [age_info['<15'], age_info['15-30'], age_info['30-45'], age_info['45-60'], age_info['60-75'], age_info['>75'], age_info['NaN']];
+    // <18, 18-23, 23-27, 27-30, 30 above
+    var xValues = ['<18', '18-23', '23-27', '27-30', '>30', 'NaN'];
+    var yValues = [age_info['<18'], age_info['18-23'], age_info['23-27'], age_info['27-30'], age_info['>30'], age_info['NaN']];
 
     const age_chart = document.getElementById('age_chart');
     var barColors = [

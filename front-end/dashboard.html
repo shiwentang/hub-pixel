@@ -33,7 +33,7 @@
                 <div class="web-title">Hub Pixel </div>
                 <ul>
                     <li><a href="#overview" class="active">Overview</a></li>
-                    <li><a href="#search" class="inactive">Search</a></li>
+                    <li><a href="#search" class="inactive">Recommendation</a></li>
                     <li><a href="#upload" class="inactive">Upload</a></li>
                 </ul>
                 <div class="logout"><a href="index.html" class="inactive">Log out</a></div>
@@ -45,15 +45,7 @@
                     <div class="header">
                         <h1>  Overview</h1>
                         <div class="dashboard">
-                            <!-- <div class="card">
-                              <h2>Users View</h2>
-                              <div class="count-view" id="view-num"></div>
-                            </div>
 
-                            <div class="card">
-                                <h2>Data Upload</h2>
-                                <div class="count-upload" id="upload-num"></div>
-                            </div> -->
 
                         </div>
 
@@ -87,15 +79,13 @@
 
                 <div class="main-inactive">
                     <div class="header">
-                        <h1>  Search</h1>
+                        <h1>  Recommendation Users List</h1>
 
-                        <!-- <div class="search-box">
-                            <input type="text" id="search" placeholder="Search...">
-                            <button type="submit" onclick="searchUser()">Submit</button>
-                        </div> -->
 
-                        <button class="export-btn"  type="button" onclick="searchUser()">Show</button>
+                        <button class="export-btn"  type="button" onclick="searchUser()">Refresh</button>
                         <button class="export-btn" type="button" onclick="exportUser()">Export</button>
+
+                        <p id= "wait-recommend" class="waiting-msg"> Please waiting...</p>
                         
                         <br></br>
                         <table id="user-list" class="user-list"></table>
@@ -121,13 +111,13 @@
                             
 
                         </div>
-                        
+                         
 
-                        <p id="upload-msg"></p>
+                        <p id="upload-msg" class="upload-msg">Please Upload A Dataset.</p>
 
-                        <p>Please upload a csv file. Below is a template.</p>
+                        <p class="info-msg">Please upload a csv file. Below is a template.</p>
 
-                        <img src="assets/images/template.png" height = 50 alt="template">
+                        <img src="assets/images/template.png" height = 50 alt="template" class="info-msg">
                         
                         
                     </div>

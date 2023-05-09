@@ -5,7 +5,7 @@ import pandas as pd
 
 s3 = boto3.client('s3')
 sqs = boto3.client('sqs')
-queue_url = 'https://sqs.us-east-1.amazonaws.com/924301557872/queueDemo' 
+queue_url = 'https://sqs.us-east-1.amazonaws.com/924301557872/Q3' 
 
 def lambda_handler(event, context):
     # Get the S3 bucket and key from the event
@@ -18,22 +18,31 @@ def lambda_handler(event, context):
     }
     # Read CSV file from S3
     response = s3.get_object(Bucket=bucket_name, Key=file_key)
-    print(response)
     status = response.get("ResponseMetadata", {}).get("HTTPStatusCode")
     df = pd.read_csv(response.get("Body"))
     # Data Clean
     items = ['firstName', 'lastName', 'phoneNumber', 'email', 'Age', 'Product', 'Return Stat', 'State', 'Company']
     df = df.filter(items=[item for item in items if item in df.columns])
-
+    
+    
+    count = 0
+    pushMessage = []
     for index, row in df.iterrows():
         # Send the row to SQS
+        count += 1
         row_dict = dict(row)
-        response = sqs.send_message(
-            QueueUrl=queue_url,
-            MessageBody=json.dumps(row_dict)
-        )
-        print(row_dict)
-        print('Sent message to SQS: {}'.format(response['MessageId']))
+        pushMessage.append(row_dict)
+        
+        if count == 20:
+            data = {"Data": pushMessage}
+            response = sqs.send_message(
+                QueueUrl=queue_url,
+                MessageBody=json.dumps(data)
+            )
+          
+            print('Sent message to SQS')
+            pushMessage = []
+            count = 0
     
     # Return a successful response
     return {

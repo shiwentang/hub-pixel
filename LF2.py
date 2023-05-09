@@ -5,46 +5,45 @@ import boto3
 db_client = boto3.client("dynamodb") 
 dynamodb = boto3.resource("dynamodb")
 
+
 def lambda_handler(event, context):
     
     companyEmail = event['queryStringParameters']['companyEmail']
     companyTable = dynamodb.Table('company-profiles')
     companyName = companyTable.get_item(Key={'email': companyEmail})['Item']['name']
     
-    table_name = "recommended_users_"+companyName 
+    table_name = "users_"+companyName  
     response = db_client.scan(TableName=table_name)
     items = response['Items']
     cleaned_items = []
     for item in items:
         cleaned_items.append({"email": item['email']['S'], 
             "State": item['State']['S'], 
-            "totalPurchase": item['totalPurchase']['N'], 
-            "Age": item['Age']['N'], 
-            "totalReturn": item['totalReturn']['N']
+            "Age": int(item['Age']['N']), 
+            "returnState": int(item['returnState']['N'])
         })
+        
     df = pd.DataFrame(cleaned_items)
-    df = df.assign(returnRate = lambda x : x['totalReturn'].astype(int)/x['totalPurchase'].astype(int))
-    df_state = df.groupby(by="State", dropna=False)['returnRate'].mean()
-    
+    df_state = df.groupby(by="State", dropna=False).mean()['returnState']
+
+    #<18, 18-23, 23-27, 27-30, 30 above
     def ageRange(age):
-        if age > 0 and age < 15:
-            return '<15'
-        elif age > 15 and age < 30:
-            return '15-30'
-        elif age > 30 and age < 45:
-            return '30-45'
-        elif age > 45 and age < 60:
-            return '45-60'
-        elif age > 60 and age < 75:
-            return '60-75'
-        elif age > 75 and age < 140:
-            return '>75'
+        if age > 0 and age < 18:
+            return '< 18'
+        elif age > 18 and age < 23:
+            return '18-23'
+        elif age > 23 and age < 27:
+            return '23-27'
+        elif age > 27 and age < 30:
+            return '27-30'
+        elif age > 30:
+            return '>30'
         else:
             return 'NaN'
     df['ageRange'] = df.apply(lambda row: ageRange(int(row['Age'])), axis=1)
     df_age = df.groupby(by="ageRange", dropna=False)['email'].count()
     
-    state = df_state.to_dict()
+    state = df_state.to_dict() 
     age = df_age.to_dict()
     
     
@@ -58,13 +57,14 @@ def lambda_handler(event, context):
         })
     df = pd.DataFrame(cleaned_items)
     
-    df_popular = df.sort_values('num')[["topic", "num"]].head(5)
+    df_popular = df.sort_values('num', ascending=False)[["topic", "num"]].head(5)
     popular = df_popular.to_dict()
 
     resp = { "data": {'age_info': age, 
             'state_info': state,
             'topic_info': popular}}
             
+    popularProduct = [popular['topic'][item] for item in popular['topic']]
             
     # store data in dynamodb
     analysis_table_name = "analysis_table"
@@ -72,21 +72,17 @@ def lambda_handler(event, context):
 
         
     highReturnValue = sorted(state.items(), key=lambda x:x[1])[-1][1]
-    print("highReturnValue", highReturnValue)
     state_high_retrun = []
     for item in state:
         if state[item] == highReturnValue:
             state_high_retrun.append(item)
-    print("state high return", state_high_retrun)
-   
+
     highAgePurchase = sorted(age.items(), key=lambda x:x[1])[-1][1]
-    print("highAgePurchase", highAgePurchase)
     age_high_purchase = []
     for item in age:
         if age[item] == highAgePurchase:
             age_high_purchase.append(item)
-    print("age_high_purchase", age_high_purchase)
-    
+
     
     if analysis_table_name not in response['TableNames']:
         response = db_client.create_table(
@@ -102,7 +98,6 @@ def lambda_handler(event, context):
                 'WriteCapacityUnits': 100
             }
         )
-        print(response)
  
     try:
         analysis_table = dynamodb.Table(analysis_table_name)
@@ -110,7 +105,9 @@ def lambda_handler(event, context):
                         Item={"email":companyEmail,
                             "name":companyName,
                             "highReturnState":state_high_retrun,
-                            "highAgePurchase":age_high_purchase})
+                            "highAgePurchase":age_high_purchase, 
+                            "highProduct": popularProduct
+                        })
     except:
         print("cannot insert to dynamodb")
 
